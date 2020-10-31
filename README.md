@@ -3,7 +3,8 @@ Java library for checking that the particular OS uses dark-theme or not IF
 the os supports this functionality.
 
 At this point, the library can only detect this on a Windows 10 system,
-but in the future the list of supported operating systems will expand. 
+but in the future the list of supported operating systems will hopefully expand.
+If you have idea how to detect this on a Mac or other systems, don't hesitate to contact me! 
 
 It's useful if you want your (GUI) app to respond to the change of the System's Ui-theme.
 
