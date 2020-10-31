@@ -9,8 +9,12 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    extraLibs
+}
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*'])
+    extraLibs fileTree(dir: 'libs', include: ['*'])
 }
 
 jar {
