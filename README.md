@@ -12,7 +12,7 @@ If you have idea how to detect this on a Mac or other systems, don't hesitate to
 
 #### Simple detection
 ```java
-SystemThemeDetector detector = SystemThemeDetector.getDetector();
+SystemUIThemeDetector detector = SystemUIThemeDetector.getDetector();
 boolean darkThemeUsed = detector.isDark();
 if (darkThemeUsed) {
     // The OS uses Dark Theme
@@ -24,7 +24,7 @@ if (darkThemeUsed) {
 #### Listening to changes
 
 ```java
-SystemThemeDetector detector = SystemThemeDetector.getDetector();
+SystemUIThemeDetector detector = SystemUIThemeDetector.getDetector();
 detector.registerListener(isDark -> {
     if (isDark) {
         // The OS just switched to Dark Theme
