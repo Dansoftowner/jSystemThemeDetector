@@ -1,4 +1,4 @@
-# jSystemFileDetector
+# jSystemThemeDetector
 Java library for checking that the particular OS uses dark-theme or not IF 
 the os supports this functionality.
 
@@ -45,11 +45,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.Dansoftowner:jSystemThemeDetector:1.1'
+    implementation 'com.github.Dansoftowner:jSystemThemeDetector:1.4'
 }
 ```
 
-# JRegistry
-[JRegistry](https://jregistry.sourceforge.io/) is another library used by this project.
-It's licensed under the LGPLv2 license.
-
+# JNA
+For the native access, this project uses [JNA](https://github.com/java-native-access/jna).
