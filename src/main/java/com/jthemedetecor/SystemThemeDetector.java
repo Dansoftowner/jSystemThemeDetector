@@ -1,13 +1,9 @@
 package com.jthemedetecor;
 
-import com.registry.RegistryKey;
-import com.registry.RegistryValue;
-import com.registry.RegistryWatcher;
-import com.registry.event.RegistryListener;
+import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.WinReg;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 class SystemInfo {
@@ -73,57 +69,64 @@ public abstract class SystemThemeDetector {
         private static final String REGISTRY_PATH = "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize";
         private static final String REGISTRY_VALUE = "AppsUseLightTheme";
 
-        private final Map<Consumer<Boolean>, RegistryListener> listeners;
-        private final RegistryKey registryPath;
+        private final Set<Consumer<Boolean>> listeners;
+        private SystemThemeListenerThread listenerThread;
 
         private WindowsThemeDetector() {
-            this.registryPath = new RegistryKey(REGISTRY_PATH);
-            this.listeners = Collections.synchronizedMap(new HashMap<>());
+            this.listeners = Collections.synchronizedSet(new HashSet<>());
+            this.listenerThread = new SystemThemeListenerThread(this);
         }
 
         @Override
         public boolean isDark() {
-            RegistryValue registryValue = registryPath.getValue(REGISTRY_VALUE);
-            if (registryValue != null) {
-                byte[] byteData = registryValue.getByteData();
-                if (byteData.length > 0) {
-                    int value = byteData[0];
-                    return value == 0;
-                }
+            try {
+                return Advapi32Util.registryValueExists(WinReg.HKEY_CURRENT_USER, REGISTRY_PATH, REGISTRY_VALUE) &&
+                        Advapi32Util.registryGetIntValue(WinReg.HKEY_CURRENT_USER, REGISTRY_PATH, REGISTRY_VALUE) == 0;
+            } catch (RuntimeException e) {
+                return false;
             }
-            return false;
         }
 
         @Override
         public void registerListener(Consumer<Boolean> darkThemeListener) {
-            RegistryListener registryListener = registryEvent -> {
-                RegistryKey key = registryEvent.getKey();
-                if (key.equals(registryPath)) {
-                    darkThemeListener.accept(isDark());
-                }
-            };
-            RegistryWatcher.addRegistryListener(registryListener);
-            RegistryWatcher.watchKey(registryPath);
-            listeners.put(darkThemeListener, registryListener);
-
-        }
-
-        @Override
-        public void removeListener(Consumer<Boolean> darkThemeListener) {
-            RegistryListener removed = listeners.remove(darkThemeListener);
-            RegistryWatcher.removeRegistryListener(removed);
-            if (listeners.isEmpty()) {
-                RegistryWatcher.removeKey(registryPath);
+            Objects.requireNonNull(darkThemeListener, "Listener shouldn't be null");
+            if (this.listeners.add(darkThemeListener)) {
+                startWorker(darkThemeListener);
             }
         }
 
         @Override
+        public void removeListener(Consumer<Boolean> darkThemeListener) {
+            this.removeFromWorker(darkThemeListener);
+            this.listeners.remove(darkThemeListener);
+        }
+
+        @Override
         public void removeAllListeners() {
-            this.listeners.values().forEach(RegistryWatcher::removeRegistryListener);
+            removeAllListenersFromWorker();
             this.listeners.clear();
         }
 
+        private void startWorker(Consumer<Boolean> listener) {
+            if (this.listenerThread.isTerminated() || this.listenerThread.isInterrupted()) {
+                this.listenerThread = new SystemThemeListenerThread(this);
+                this.listenerThread.addListener(listener);
+                this.listenerThread.start();
+            } else if (!this.listenerThread.isAlive()){
+                this.listenerThread.addListener(listener);
+                this.listenerThread.start();
+            }
+        }
 
+        private void removeFromWorker(Consumer<Boolean> listener) {
+            if (!this.listenerThread.isTerminated())
+                this.listenerThread.removeListener(listener);
+        }
+
+        private void removeAllListenersFromWorker() {
+            if (!this.listenerThread.isTerminated())
+                this.listenerThread.removeAllListener();
+        }
     }
 
     private static final class EmptyThemeDetector extends SystemThemeDetector {

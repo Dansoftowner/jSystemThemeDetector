@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="jSystemThemeDetector.main:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/jSystemThemeDetector_main_jar</output-path>
+    <root id="archive" name="jSystemThemeDetector.main.jar">
+      <element id="module-output" name="jSystemThemeDetector.main" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/jregistry-1.8.3.jar" path-in-jar="/" />
+      <element id="file-copy" path="$PROJECT_DIR$/libs/reg.dll" />
+      <element id="file-copy" path="$PROJECT_DIR$/libs/reg_x64.dll" />
+    </root>
+  </artifact>
+</component>

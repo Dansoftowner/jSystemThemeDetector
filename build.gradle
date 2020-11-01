@@ -9,17 +9,9 @@ repositories {
     mavenCentral()
 }
 
-configurations {
-    extraLibs
-    compile.extendsFrom(extraLibs)
-}
 
 dependencies {
-    extraLibs fileTree(dir: 'libs', include: ['*'])
+    implementation 'net.java.dev.jna:jna:5.6.0'
+    implementation 'net.java.dev.jna:jna-platform:5.6.0'
 }
 
-jar {
-    from {
-        configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-}
