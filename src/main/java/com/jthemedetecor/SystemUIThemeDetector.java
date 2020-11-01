@@ -14,18 +14,18 @@ class SystemInfo {
 }
 
 /**
- * A {@link SystemThemeDetector} can detect whether the current system uses dark theme or not.
+ * A {@link SystemUIThemeDetector} can detect whether the current system uses dark theme or not.
  *
  * @author Daniel Gyorffy
  */
-public abstract class SystemThemeDetector {
+public abstract class SystemUIThemeDetector {
 
-    private static SystemThemeDetector detector;
+    private static SystemUIThemeDetector detector;
 
     /**
      * Don't let anyone to instantiate or inherit this class.
      */
-    private SystemThemeDetector() {
+    private SystemUIThemeDetector() {
     }
 
     /**
@@ -54,17 +54,17 @@ public abstract class SystemThemeDetector {
     public abstract void removeAllListeners();
 
     /**
-     * Returns the right {@link SystemThemeDetector} designed for the current OS.
+     * Returns the right {@link SystemUIThemeDetector} designed for the current OS.
      *
-     * @return the {@link SystemThemeDetector} implementation
+     * @return the {@link SystemUIThemeDetector} implementation
      */
-    public synchronized static SystemThemeDetector getDetector() {
+    public synchronized static SystemUIThemeDetector getDetector() {
         if (detector != null) return detector;
-        else if (SystemInfo.isWin10()) return detector = new WindowsThemeDetector();
-        else return detector = new EmptyThemeDetector();
+        else if (SystemInfo.isWin10()) return detector = new WindowsUIThemeDetector();
+        else return detector = new EmptyUIThemeDetector();
     }
 
-    private static final class WindowsThemeDetector extends SystemThemeDetector {
+    private static final class WindowsUIThemeDetector extends SystemUIThemeDetector {
 
         private static final String REGISTRY_PATH = "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize";
         private static final String REGISTRY_VALUE = "AppsUseLightTheme";
@@ -72,7 +72,7 @@ public abstract class SystemThemeDetector {
         private final Set<Consumer<Boolean>> listeners;
         private SystemThemeListenerThread listenerThread;
 
-        private WindowsThemeDetector() {
+        private WindowsUIThemeDetector() {
             this.listeners = Collections.synchronizedSet(new HashSet<>());
             this.listenerThread = new SystemThemeListenerThread(this);
         }
@@ -129,7 +129,7 @@ public abstract class SystemThemeDetector {
         }
     }
 
-    private static final class EmptyThemeDetector extends SystemThemeDetector {
+    private static final class EmptyUIThemeDetector extends SystemUIThemeDetector {
         @Override
         public boolean isDark() {
             return false;

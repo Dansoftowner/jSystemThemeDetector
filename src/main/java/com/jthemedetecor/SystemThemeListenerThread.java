@@ -15,12 +15,12 @@ class SystemThemeListenerThread extends Thread implements Thread.UncaughtExcepti
     private boolean lastValue;
     private boolean terminated;
     private final Set<Consumer<Boolean>> listeners;
-    private final SystemThemeDetector systemThemeDetector;
+    private final SystemUIThemeDetector systemUIThemeDetector;
 
-    SystemThemeListenerThread(SystemThemeDetector systemThemeDetector) {
-        this.systemThemeDetector = Objects.requireNonNull(systemThemeDetector);
+    SystemThemeListenerThread(SystemUIThemeDetector systemUIThemeDetector) {
+        this.systemUIThemeDetector = Objects.requireNonNull(systemUIThemeDetector);
         this.listeners = Collections.synchronizedSet(new HashSet<>());
-        this.lastValue = this.systemThemeDetector.isDark();
+        this.lastValue = this.systemUIThemeDetector.isDark();
         this.setName(NAME);
         this.setDaemon(true);
         this.setUncaughtExceptionHandler(this);
@@ -46,7 +46,7 @@ class SystemThemeListenerThread extends Thread implements Thread.UncaughtExcepti
     @Override
     public void run() {
         while (!this.isInterrupted() && !listeners.isEmpty()) {
-            boolean lastValue = systemThemeDetector.isDark();
+            boolean lastValue = systemUIThemeDetector.isDark();
             if (this.lastValue != lastValue) {
                 listeners.forEach(listener -> listener.accept(lastValue));
             }

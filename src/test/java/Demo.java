@@ -1,4 +1,4 @@
-import com.jthemedetecor.SystemThemeDetector;
+import com.jthemedetecor.SystemUIThemeDetector;
 
 import java.util.Scanner;
 
@@ -7,7 +7,7 @@ public class Demo {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Watching system theme change:");
-        SystemThemeDetector detector = SystemThemeDetector.getDetector();
+        SystemUIThemeDetector detector = SystemUIThemeDetector.getDetector();
         detector.registerListener(isDark -> System.out.println(isDark ? "It's just switched to DARK" : "It's just switched to LIGHT"));
         while(true) {
             String line = scanner.nextLine();
