@@ -8,6 +8,9 @@ It works on **Windows 10**, **MacOS Mojave** (or later) and even on **some Linux
 
 This library is inspired by the dark-theme detection in [Intellij Idea](https://github.com/JetBrains/intellij-community).
 
+# Requirements
+**Java 11 or higher**
+
 # Basic examples
 
 #### Simple detection
@@ -45,7 +48,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.Dansoftowner:jSystemThemeDetector:1.4'
+    implementation 'com.github.Dansoftowner:jSystemThemeDetector:2.1'
 }
 ```
 
