@@ -55,6 +55,7 @@ dependencies {
 # Used libraries
 
  - [SLF4J](http://www.slf4j.org/) - Simple Logging Facade for Java
+ - [Jetbrains Annotations](https://github.com/JetBrains/java-annotations) - Annotations for JVM-based languages
  - [JNA](https://github.com/java-native-access/jna) - Java Native Access
  - [JFA](https://github.com/0x4a616e/jfa) - Java Foundation Access
  - [OSHI](https://github.com/oshi/oshi) - Operating system & hardware information
