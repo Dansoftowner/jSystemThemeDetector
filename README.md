@@ -52,6 +52,17 @@ dependencies {
 }
 ```
 
+# GUI Demo application
+
+There is a Demo application available [here](src/test/java/GuiDemo.java). It's 
+a basic JavaFX application that changes the UI when the OS switched to a dark/light theme.
+
+### Linux/Ubuntu example
+![Running the demo app on Ubuntu](docs/screenshot/UbuntuThemeDetection.gif)
+
+### Windows 10 example
+![Running the demo app on Windows 10](docs/screenshot/Windows10ThemeDetection.gif)
+
 # Used libraries
 
  - [SLF4J](http://www.slf4j.org/) - Simple Logging Facade for Java
