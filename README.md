@@ -1,36 +1,36 @@
 # jSystemThemeDetector
-Java library for checking that the particular OS uses dark-theme or not IF 
-the os supports this functionality.
+In most modern operating systems there is a dark mode option. This library is created for detecting 
+this using java.
 
-It's useful if you want your (GUI) app to respond to the change of the System's Ui-theme.
+It can be useful for example if you want to synchronize your GUI App's look and feel with the operating system.
 
-At this point, the library can only detect this on a Windows 10 system,
-but in the future the list of supported operating systems will hopefully expand.
-If you have idea how to detect this on a Mac or other systems, don't hesitate to contact me! 
+It works on **Windows 10**, **MacOS Mojave** (or later) and even on **some Linux distributions**.
+
+This library is inspired by the dark-theme detection in [Intellij Idea](https://github.com/JetBrains/intellij-community).
 
 # Basic examples
 
 #### Simple detection
 ```java
-SystemUIThemeDetector detector = SystemUIThemeDetector.getDetector();
-boolean darkThemeUsed = detector.isDark();
-if (darkThemeUsed) {
-    // The OS uses Dark Theme
+final OsThemeDetector detector = OsThemeDetector.getDetector();
+final boolean isDarkThemeUsed = detector.isDark();
+if (isDarkThemeUsed) {
+    //The OS uses a dark theme
 } else {
-    // ...
+    //The OS uses a light theme
 }
 ```
 
 #### Listening to changes
 
 ```java
-SystemUIThemeDetector detector = SystemUIThemeDetector.getDetector();
+final OsThemeDetector detector = OsThemeDetector.getDetector();
 detector.registerListener(isDark -> {
     if (isDark) {
-        // The OS just switched to Dark Theme
+        //The OS switched to a dark theme
     } else {
-        // ...
-    }   
+        //The OS switched to a light theme
+    }
 });
 ```
 
@@ -49,5 +49,10 @@ dependencies {
 }
 ```
 
-# JNA
-For the native access, this project uses [JNA](https://github.com/java-native-access/jna).
+# Used libraries
+
+ - [SLF4J](http://www.slf4j.org/) - Simple Logging Facade for Java
+ - [JNA](https://github.com/java-native-access/jna) - Java Native Access
+ - [JFA](https://github.com/0x4a616e/jfa) - Java Foundation Access
+ - [OSHI](https://github.com/oshi/oshi) - Operating system & hardware information
+
