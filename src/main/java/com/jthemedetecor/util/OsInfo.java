@@ -1,10 +1,10 @@
-package com.jthemedetecor;
+package com.jthemedetecor.util;
 
 import oshi.PlatformEnum;
 import oshi.SystemInfo;
 import oshi.software.os.OperatingSystem;
 
-class OsInfo {
+public class OsInfo {
 
     private static final PlatformEnum platformType;
     private static final String version;
