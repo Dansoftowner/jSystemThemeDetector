@@ -40,7 +40,7 @@ class WindowsThemeDetector extends OsThemeDetector {
 
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public void registerListener(@NotNull Consumer<Boolean> darkThemeListener) {
+    public synchronized void registerListener(@NotNull Consumer<Boolean> darkThemeListener) {
         Objects.requireNonNull(darkThemeListener);
         final boolean listenerAdded = listeners.add(darkThemeListener);
         final boolean singleListener = listenerAdded && listeners.size() == 1;
@@ -53,7 +53,7 @@ class WindowsThemeDetector extends OsThemeDetector {
     }
 
     @Override
-    public void removeListener(@Nullable Consumer<Boolean> darkThemeListener) {
+    public synchronized void removeListener(@Nullable Consumer<Boolean> darkThemeListener) {
         listeners.remove(darkThemeListener);
         if (listeners.isEmpty()) {
             this.detectorThread.interrupt();
