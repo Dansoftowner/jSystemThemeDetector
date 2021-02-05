@@ -29,10 +29,7 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 /**
- * Determines the dark/light theme on Mac System through the <i>Apple Foundation framework</i>.
- *
- * <p>
- * This solution was written based on the <a href="https://github.com/JetBrains/intellij-community/blob/5c7e93fa35cb544e87c283888f5d92a001fa7260/platform/platform-impl/src/com/intellij/ide/ui/laf/SystemDarkThemeDetector.kt">INTELLIJ IDEA'S MacOS DARK THEME DETECTION IMPLEMENTATION</a>.
+ * Determines the dark/light theme on a MacOS System through the <i>Apple Foundation framework</i>.
  *
  * @author Daniel Gyorffy
  */
