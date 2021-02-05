@@ -96,17 +96,18 @@ class MacOSThemeDetector extends OsThemeDetector {
     }
 
     @Override
-    public synchronized void registerListener(@NotNull Consumer<Boolean> darkThemeListener) {
+    public void registerListener(@NotNull Consumer<Boolean> darkThemeListener) {
         listeners.add(darkThemeListener);
     }
 
     @Override
-    public synchronized void removeListener(@Nullable Consumer<Boolean> darkThemeListener) {
+    public void removeListener(@Nullable Consumer<Boolean> darkThemeListener) {
         listeners.remove(darkThemeListener);
     }
 
     private void notifyListeners() {
-        listeners.forEach(listener -> listener.accept(isDark()));
+        final var isDark = isDark();
+        listeners.forEach(listener -> listener.accept(isDark));
     }
 }
 
