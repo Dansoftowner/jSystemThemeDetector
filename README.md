@@ -63,6 +63,9 @@ a basic JavaFX application that changes the UI when the OS switched to a dark/li
 ### Windows 10 example
 ![Running the demo app on Windows 10](docs/screenshot/Windows10ThemeDetection.gif)
 
+# Projects using `jSystemThemeDetector`
+If this library is used by your project, let me know in the `Discussions` and I will mention that in this section. 
+
 # Used libraries
 
  - [SLF4J](http://www.slf4j.org/) - Simple Logging Facade for Java
