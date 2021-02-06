@@ -43,7 +43,7 @@ class MacOSThemeDetector extends OsThemeDetector {
     private final Callback themeChangedCallback = new Callback() {
         @SuppressWarnings("unused")
         public void callback() {
-            notifyListeners();
+            notifyListeners(isDark());
         }
     };
 
@@ -105,8 +105,7 @@ class MacOSThemeDetector extends OsThemeDetector {
         listeners.remove(darkThemeListener);
     }
 
-    private void notifyListeners() {
-        final var isDark = isDark();
+    private void notifyListeners(boolean isDark) {
         listeners.forEach(listener -> listener.accept(isDark));
     }
 }
