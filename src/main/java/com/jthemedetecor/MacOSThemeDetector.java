@@ -57,7 +57,7 @@ class MacOSThemeDetector extends OsThemeDetector {
             final ID delegateClass = Foundation.allocateObjcClassPair(Foundation.getObjcClass("NSObject"), "NSColorChangesObserver");
             if (!ID.NIL.equals(delegateClass)) {
                 if (!Foundation.addMethod(delegateClass, Foundation.createSelector("handleAppleThemeChanged:"), themeChangedCallback, "v@")) {
-                    throw new RuntimeException("Observer method cannot be added");
+                    logger.error("Observer method cannot be added");
                 }
                 Foundation.registerObjcClassPair(delegateClass);
             }
