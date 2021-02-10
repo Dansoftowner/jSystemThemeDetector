@@ -8,8 +8,6 @@ public class OsInfo {
 
     private static final PlatformEnum platformType;
     private static final String version;
-    private static final String buildNumber;
-    private static final String name;
 
     static {
         final SystemInfo systemInfo = new SystemInfo();
@@ -18,8 +16,6 @@ public class OsInfo {
 
         platformType = SystemInfo.getCurrentPlatformEnum();
         version = osVersionInfo.getVersion();
-        buildNumber = osVersionInfo.getBuildNumber();
-        name = osInfo.getFamily();
     }
 
     public static boolean isWindows10OrLater() {
