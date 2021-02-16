@@ -17,6 +17,8 @@ package com.jthemedetecor;
 import com.jthemedetecor.util.OsInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.function.Consumer;
 
@@ -26,6 +28,8 @@ import java.util.function.Consumer;
  * @author Daniel Gyorffy
  */
 public abstract class OsThemeDetector {
+
+    private static final Logger logger = LoggerFactory.getLogger(OsThemeDetector.class);
 
     private static OsThemeDetector osThemeDetector;
 
@@ -37,14 +41,22 @@ public abstract class OsThemeDetector {
         if (osThemeDetector != null) {
             return osThemeDetector;
         } else if (OsInfo.isWindows10OrLater()) {
+            logDetection("Windows 10", WindowsThemeDetector.class);
             return osThemeDetector = new WindowsThemeDetector();
-        } else if (OsInfo.isLinux()) {
-            return osThemeDetector = new LinuxThemeDetector();
+        } else if (OsInfo.isGnome()) {
+            logDetection("Gnome", GnomeThemeDetector.class);
+            return osThemeDetector = new GnomeThemeDetector();
         } else if (OsInfo.isMacOsMojaveOrLater()) {
+            logDetection("MacOS", MacOSThemeDetector.class);
             return osThemeDetector = new MacOSThemeDetector();
         } else {
             return osThemeDetector = new EmptyDetector();
         }
+    }
+
+    private static void logDetection(String desktop, Class<? extends OsThemeDetector> detectorClass) {
+        logger.debug("Supported Desktop detected: {}", desktop);
+        logger.debug("Creating {}...", detectorClass.getName());
     }
 
     /**

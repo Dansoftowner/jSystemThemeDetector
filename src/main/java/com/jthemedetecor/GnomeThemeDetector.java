@@ -35,9 +35,9 @@ import java.util.regex.Pattern;
  *
  * @author Daniel Gyorffy
  */
-class LinuxThemeDetector extends OsThemeDetector {
+class GnomeThemeDetector extends OsThemeDetector {
 
-    private static final Logger logger = LoggerFactory.getLogger(LinuxThemeDetector.class);
+    private static final Logger logger = LoggerFactory.getLogger(GnomeThemeDetector.class);
 
     private static final String MONITORING_CMD = "gsettings monitor org.gnome.desktop.interface gtk-theme";
     private static final String GET_CMD = "gsettings get org.gnome.desktop.interface gtk-theme";
@@ -96,10 +96,10 @@ class LinuxThemeDetector extends OsThemeDetector {
      */
     private static final class DetectorThread extends Thread {
 
-        private final LinuxThemeDetector detector;
+        private final GnomeThemeDetector detector;
         private boolean lastValue;
 
-        DetectorThread(@NotNull LinuxThemeDetector detector) {
+        DetectorThread(@NotNull GnomeThemeDetector detector) {
             this.detector = detector;
             this.lastValue = detector.isDark();
             this.setName("GTK Theme Detector Thread");
