@@ -79,6 +79,9 @@ public abstract class OsThemeDetector {
      */
     public abstract void removeListener(@Nullable Consumer<Boolean> darkThemeListener);
 
+    public static boolean isSupported() {
+        return OsInfo.isWindows10OrLater() || OsInfo.isMacOsMojaveOrLater() || OsInfo.isGnome();
+    }
 
     private static final class EmptyDetector extends OsThemeDetector {
         @Override
