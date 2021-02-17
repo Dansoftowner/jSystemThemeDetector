@@ -50,6 +50,8 @@ public abstract class OsThemeDetector {
             logDetection("MacOS", MacOSThemeDetector.class);
             return osThemeDetector = new MacOSThemeDetector();
         } else {
+            logger.debug("Theme detection is not supported on the system: {} {}", OsInfo.getFamily(), OsInfo.getVersion());
+            logger.debug("Creating empty detector...");
             return osThemeDetector = new EmptyDetector();
         }
     }
