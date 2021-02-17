@@ -17,6 +17,7 @@ public class OsInfo {
     private static final Logger logger = LoggerFactory.getLogger(OsThemeDetector.class);
 
     private static final PlatformEnum platformType;
+    private static final String family;
     private static final String version;
 
     static {
@@ -25,6 +26,7 @@ public class OsInfo {
         final OperatingSystem.OSVersionInfo osVersionInfo = osInfo.getVersionInfo();
 
         platformType = SystemInfo.getCurrentPlatformEnum();
+        family = osInfo.getFamily();
         version = osVersionInfo.getVersion();
     }
 
@@ -58,6 +60,14 @@ public class OsInfo {
 
     public static boolean hasTypeAndVersionOrHigher(PlatformEnum platformType, String version) {
         return hasType(platformType) && hasVersionOrHigher(version);
+    }
+
+    public static String getVersion() {
+        return version;
+    }
+
+    public static String getFamily() {
+        return family;
     }
 
     private static int parseVersion(String version) {
