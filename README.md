@@ -55,7 +55,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.Dansoftowner:jSystemThemeDetector:3.0'
+    implementation 'com.github.Dansoftowner:jSystemThemeDetector:3.1'
 }
 ```
 
