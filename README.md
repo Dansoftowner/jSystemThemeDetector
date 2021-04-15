@@ -1,12 +1,19 @@
 # jSystemThemeDetector
+
+[![](https://jitpack.io/v/Dansoftowner/jSystemThemeDetector.svg)](https://jitpack.io/#Dansoftowner/jSystemThemeDetector)
+[![GitHub last commit](https://img.shields.io/github/last-commit/Dansoftowner/jSystemthemedetector)](https://github.com/Dansoftowner/jSystemThemeDetector/commits/master)
+[![GitHub issues](https://img.shields.io/github/issues/Dansoftowner/jsystemthemedetector)](https://github.com/Dansoftowner/jSystemThemeDetector/issues)
+[![GitHub](https://img.shields.io/github/license/Dansoftowner/Jsystemthemedetector)](LICENSE)
+
 In most modern operating systems there is a dark mode option. This library is created for detecting 
 this using java.
 
 It can be useful for example if you want to synchronize your GUI App's look and feel with the operating system.
 
-It works on **Windows 10**, **MacOS Mojave** (or later) and even on **some Linux distributions**.
+> This library is inspired by the dark-theme detection in [Intellij Idea](https://github.com/JetBrains/intellij-community).
 
-This library is inspired by the dark-theme detection in [Intellij Idea](https://github.com/JetBrains/intellij-community).
+# Compatibility
+It works on **Windows 10**, **MacOS Mojave** (or later) and even on **some Linux distributions**.
 
 # Requirements
 **Java 11 or higher**
@@ -65,6 +72,8 @@ a basic JavaFX application that changes the UI when the OS switched to a dark/li
 
 # Projects using `jSystemThemeDetector`
 If this library is used by your project, let me know in the `Discussions` and I will mention that in this section. 
+
+* [Document Archiver](https://github.com/Document-Archiver/com.sophisticatedapps.archiving.document-archiver) - Archive all your documents in a consistent way, which enables you to retrieve them later fast and easy.
 
 # Used libraries
 
