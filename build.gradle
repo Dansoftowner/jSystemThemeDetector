@@ -9,6 +9,18 @@ repositories {
     mavenCentral()
 }
 
+compileJava {
+    // placing dependencies to the module path
+    // https://discuss.gradle.org/t/gradle-doesnt-add-modules-to-module-path-during-compile/27382
+
+    inputs.property("moduleName", "com.jthemedetector")
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+        ]
+        classpath = files()
+    }
+}
 
 dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
