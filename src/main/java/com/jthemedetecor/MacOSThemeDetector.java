@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
@@ -43,9 +44,7 @@ class MacOSThemeDetector extends OsThemeDetector {
     private final Callback themeChangedCallback = new Callback() {
         @SuppressWarnings("unused")
         public void callback() {
-            synchronized (listeners) {
-                notifyListeners(isDark());
-            }
+            notifyListeners(isDark());
         }
     };
 
@@ -99,16 +98,12 @@ class MacOSThemeDetector extends OsThemeDetector {
 
     @Override
     public void registerListener(@NotNull Consumer<Boolean> darkThemeListener) {
-        synchronized (listeners) {
-            listeners.add(darkThemeListener);
-        }
+        listeners.add(darkThemeListener);
     }
 
     @Override
     public void removeListener(@Nullable Consumer<Boolean> darkThemeListener) {
-        synchronized (listeners) {
-            listeners.remove(darkThemeListener);
-        }
+        listeners.remove(darkThemeListener);
     }
 
     private void notifyListeners(boolean isDark) {
