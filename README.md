@@ -51,15 +51,15 @@ final OsThemeDetector detector = OsThemeDetector.getDetector();
 detector.registerListener(isDark -> {
     Platform.runLater(() -> {
         if (isDark) {
-        //The OS switched to a dark theme
+            // The OS switched to a dark theme
         } else {
-        //The OS switched to a light theme
+            // The OS switched to a light theme
         }
     })
 });
 ```
 It's important because if you are doing JavaFX specific stuff in the listener, you should execute it on the `JavaFX Application Thread`.
-Otherwise, you will face some serious issues.
+Otherwise, you might face some serious issues.
 
 # Using it with Gradle, Maven... etc
 It's available on [JitPack](https://jitpack.io/#Dansoftowner/jSystemThemeDetector)!
