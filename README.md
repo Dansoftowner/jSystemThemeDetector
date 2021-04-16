@@ -44,7 +44,7 @@ detector.registerListener(isDark -> {
 });
 ```
 
-##### Using it with JavaFX
+#### Using it with JavaFX
 If you use the listener for changing the UI in a JavaFX application, make sure you use `Platform.runLater` in it:
 ```java
 final OsThemeDetector detector = OsThemeDetector.getDetector();
@@ -58,6 +58,8 @@ detector.registerListener(isDark -> {
     })
 });
 ```
+It's important because if you are doing JavaFX specific stuff in the listener, you should execute it on the `JavaFX Application Thread`.
+Otherwise, you will face some serious issues.
 
 # Using it with Gradle, Maven... etc
 It's available on [JitPack](https://jitpack.io/#Dansoftowner/jSystemThemeDetector)!
