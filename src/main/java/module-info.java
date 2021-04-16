@@ -4,6 +4,7 @@ module com.jthemedetector {
     requires jfa;
     requires org.jetbrains.annotations;
     requires com.sun.jna;
+    requires com.github.oshi;
 
     exports com.jthemedetecor;
     
