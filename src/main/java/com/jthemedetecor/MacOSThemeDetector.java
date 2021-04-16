@@ -39,11 +39,14 @@ class MacOSThemeDetector extends OsThemeDetector {
 
     private final Set<Consumer<Boolean>> listeners = Collections.synchronizedSet(new HashSet<>());
     private final Pattern themeNamePattern = Pattern.compile(".*dark.*", Pattern.CASE_INSENSITIVE);
+    private final Object iterateLock = new Object();
 
     private final Callback themeChangedCallback = new Callback() {
         @SuppressWarnings("unused")
         public void callback() {
-            notifyListeners(isDark());
+            synchronized (iterateLock) {
+                notifyListeners(isDark());
+            }
         }
     };
 
@@ -97,12 +100,16 @@ class MacOSThemeDetector extends OsThemeDetector {
 
     @Override
     public void registerListener(@NotNull Consumer<Boolean> darkThemeListener) {
-        listeners.add(darkThemeListener);
+        synchronized (iterateLock) {
+            listeners.add(darkThemeListener);
+        }
     }
 
     @Override
     public void removeListener(@Nullable Consumer<Boolean> darkThemeListener) {
-        listeners.remove(darkThemeListener);
+        synchronized (iterateLock) {
+            listeners.remove(darkThemeListener);
+        }
     }
 
     private void notifyListeners(boolean isDark) {
