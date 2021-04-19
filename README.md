@@ -55,7 +55,7 @@ detector.registerListener(isDark -> {
         } else {
             // The OS switched to a light theme
         }
-    })
+    });
 });
 ```
 It's important because if you are doing JavaFX specific stuff in the listener, you should execute it on the `JavaFX Application Thread`.
