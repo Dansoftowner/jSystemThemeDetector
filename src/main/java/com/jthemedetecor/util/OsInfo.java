@@ -26,7 +26,7 @@ public class OsInfo {
         final OperatingSystem osInfo = systemInfo.getOperatingSystem();
         final OperatingSystem.OSVersionInfo osVersionInfo = osInfo.getVersionInfo();
 
-        platformType = SystemInfo.getCurrentPlatformEnum();
+        platformType = SystemInfo.getCurrentPlatform();
         family = osInfo.getFamily();
         version = osVersionInfo.getVersion();
     }
@@ -69,14 +69,6 @@ public class OsInfo {
 
     public static String getFamily() {
         return family;
-    }
-
-    private static int parseVersion(String version) {
-        try {
-            return Integer.parseInt(version.replace(".", ""));
-        } catch (NumberFormatException e) {
-            return 0;
-        }
     }
 
     private static boolean queryResultContains(@NotNull String cmd, @NotNull String subResult) {
