@@ -38,6 +38,8 @@ dependencies {
     //OSHI
     implementation 'com.github.oshi:oshi-core:5.7.1'
 
+    implementation 'io.github.g00fy2:versioncompare:1.4.1'
+
     implementation 'org.jetbrains:annotations:19.0.0'
 }
 
