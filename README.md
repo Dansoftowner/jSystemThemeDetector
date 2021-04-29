@@ -99,4 +99,4 @@ If this library is used by your project, let me know in the `Discussions` and I 
  - [JNA](https://github.com/java-native-access/jna) - Java Native Access
  - [JFA](https://github.com/0x4a616e/jfa) - Java Foundation Access
  - [OSHI](https://github.com/oshi/oshi) - Operating system & hardware information
-
+ - [Version Compare](https://github.com/G00fY2/version-compare) - Lightweight Android & Java library to compare version strings.
