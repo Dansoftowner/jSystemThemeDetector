@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import oshi.PlatformEnum;
 import oshi.SystemInfo;
 import oshi.software.os.OperatingSystem;
+import io.github.g00fy2.versioncompare.Version;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class OsInfo {
     }
 
     public static boolean isMacOsMojaveOrLater() {
-        return hasTypeAndVersionOrHigher(PlatformEnum.MACOSX, "10.14");
+        return hasTypeAndVersionOrHigher(PlatformEnum.MACOS, "10.14");
     }
 
     public static boolean isGnome() {
@@ -54,12 +55,12 @@ public class OsInfo {
         return OsInfo.platformType.equals(platformType);
     }
 
-    public static boolean hasVersionOrHigher(String version) {
-        return parseVersion(OsInfo.version) >= parseVersion(version);
+    public static boolean isVersionAtLeast(String version) {
+        return new Version(OsInfo.version).isAtLeast(version);
     }
 
     public static boolean hasTypeAndVersionOrHigher(PlatformEnum platformType, String version) {
-        return hasType(platformType) && hasVersionOrHigher(version);
+        return hasType(platformType) && isVersionAtLeast(version);
     }
 
     public static String getVersion() {

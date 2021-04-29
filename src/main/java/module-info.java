@@ -5,6 +5,7 @@ module com.jthemedetector {
     requires org.jetbrains.annotations;
     requires com.sun.jna;
     requires com.github.oshi;
+    requires versioncompare;
 
     exports com.jthemedetecor;
     
