@@ -44,7 +44,7 @@ detector.registerListener(isDark -> {
 });
 ```
 
-#### Using it with Swing/JavaFX
+#### Using it with JavaFX/Swing
 If you use the listener for changing the UI in a **JavaFX** application, make sure you use `Platform.runLater` in it:
 ```java
 final OsThemeDetector detector = OsThemeDetector.getDetector();
