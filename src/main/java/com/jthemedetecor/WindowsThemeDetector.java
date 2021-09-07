@@ -14,7 +14,11 @@
 
 package com.jthemedetecor;
 
+import com.sun.jna.platform.win32.Advapi32;
 import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.W32Errors;
+import com.sun.jna.platform.win32.Win32Exception;
+import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.platform.win32.WinReg;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +36,7 @@ import java.util.function.Consumer;
  * Works on a Windows 10 system.
  *
  * @author Daniel Gyorffy
+ * @author airsquared
  */
 class WindowsThemeDetector extends OsThemeDetector {
 
@@ -80,7 +85,6 @@ class WindowsThemeDetector extends OsThemeDetector {
      */
     private static final class DetectorThread extends Thread {
 
-        private final Object lock = new Object();
         private final WindowsThemeDetector themeDetector;
 
         private boolean lastValue;
@@ -95,7 +99,18 @@ class WindowsThemeDetector extends OsThemeDetector {
 
         @Override
         public void run() {
+            WinReg.HKEYByReference hkey = new WinReg.HKEYByReference();
+            int err = Advapi32.INSTANCE.RegOpenKeyEx(WinReg.HKEY_CURRENT_USER, REGISTRY_PATH, 0, WinNT.KEY_READ, hkey);
+            if (err != W32Errors.ERROR_SUCCESS) {
+                throw new Win32Exception(err);
+            }
+
             while (!this.isInterrupted()) {
+                err = Advapi32.INSTANCE.RegNotifyChangeKeyValue(hkey.getValue(), false, WinNT.REG_NOTIFY_CHANGE_LAST_SET, null, false);
+                if (err != W32Errors.ERROR_SUCCESS) {
+                    throw new Win32Exception(err);
+                }
+
                 boolean currentDetection = themeDetector.isDark();
                 if (currentDetection != this.lastValue) {
                     lastValue = currentDetection;
@@ -108,15 +123,8 @@ class WindowsThemeDetector extends OsThemeDetector {
                         }
                     }
                 }
-
-                synchronized (lock) {
-                    try {
-                        lock.wait(1000);
-                    } catch (InterruptedException e) {
-                        break;
-                    }
-                }
             }
+            Advapi32Util.registryCloseKey(hkey.getValue());
         }
     }
 }
