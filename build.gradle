@@ -29,11 +29,13 @@ dependencies {
     testImplementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
 
     //JNA
-    implementation 'net.java.dev.jna:jna:5.8.0'
-    implementation 'net.java.dev.jna:jna-platform:5.8.0'
+    implementation 'net.java.dev.jna:jna:5.9.0'
+    implementation 'net.java.dev.jna:jna-platform:5.9.0'
 
     //JFA
-    implementation 'de.jangassen:jfa:1.2.0'
+    implementation ('de.jangassen:jfa:1.2.0') {
+        exclude group: 'net.java.dev.jna', module: 'jna' // different jna version
+    }
 
     //OSHI
     implementation 'com.github.oshi:oshi-core:5.7.5'
