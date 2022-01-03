@@ -2,8 +2,8 @@ plugins {
     id 'java'
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group 'com.jthemedetector'
+version '3.8'
 
 repositories {
     mavenCentral()
@@ -23,14 +23,14 @@ compileJava {
 }
 
 dependencies {
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.32'
 
     testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     testImplementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
 
     //JNA
-    implementation 'net.java.dev.jna:jna:5.9.0'
-    implementation 'net.java.dev.jna:jna-platform:5.9.0'
+    implementation 'net.java.dev.jna:jna:5.10.0'
+    implementation 'net.java.dev.jna:jna-platform:5.10.0'
 
     //JFA
     implementation ('de.jangassen:jfa:1.2.0') {
@@ -38,10 +38,10 @@ dependencies {
     }
 
     //OSHI
-    implementation 'com.github.oshi:oshi-core:5.7.5'
+    implementation 'com.github.oshi:oshi-core:5.8.6'
 
     implementation 'io.github.g00fy2:versioncompare:1.4.1'
 
-    implementation 'org.jetbrains:annotations:19.0.0'
+    implementation 'org.jetbrains:annotations:22.0.0'
 }
 
