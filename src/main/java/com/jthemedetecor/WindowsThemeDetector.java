@@ -47,7 +47,7 @@ class WindowsThemeDetector extends OsThemeDetector {
     private static final String REGISTRY_VALUE = "AppsUseLightTheme";
 
     private final Set<Consumer<Boolean>> listeners = new ConcurrentHashSet<>();
-    private DetectorThread detectorThread;
+    private volatile DetectorThread detectorThread;
 
     WindowsThemeDetector() {
     }

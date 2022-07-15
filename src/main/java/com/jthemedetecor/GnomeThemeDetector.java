@@ -46,7 +46,7 @@ class GnomeThemeDetector extends OsThemeDetector {
     private final Set<Consumer<Boolean>> listeners = new ConcurrentHashSet<>();
     private final Pattern darkThemeNamePattern = Pattern.compile(".*dark.*", Pattern.CASE_INSENSITIVE);
 
-    private DetectorThread detectorThread;
+    private volatile DetectorThread detectorThread;
 
     @Override
     public boolean isDark() {
