@@ -14,6 +14,7 @@
 
 package com.jthemedetecor;
 
+import com.jthemedetecor.util.ConcurrentHashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ class GnomeThemeDetector extends OsThemeDetector {
     private static final String MONITORING_CMD = "gsettings monitor org.gnome.desktop.interface gtk-theme";
     private static final String GET_CMD = "gsettings get org.gnome.desktop.interface gtk-theme";
 
-    private final Set<Consumer<Boolean>> listeners = Collections.synchronizedSet(new HashSet<>());
+    private final Set<Consumer<Boolean>> listeners = new ConcurrentHashSet<>();
     private final Pattern darkThemeNamePattern = Pattern.compile(".*dark.*", Pattern.CASE_INSENSITIVE);
 
     private DetectorThread detectorThread;

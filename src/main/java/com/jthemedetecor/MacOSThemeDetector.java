@@ -14,6 +14,7 @@
 
 package com.jthemedetecor;
 
+import com.jthemedetecor.util.ConcurrentHashSet;
 import com.sun.jna.Callback;
 import de.jangassen.jfa.foundation.Foundation;
 import de.jangassen.jfa.foundation.ID;
@@ -39,7 +40,7 @@ class MacOSThemeDetector extends OsThemeDetector {
 
     private static final Logger logger = LoggerFactory.getLogger(MacOSThemeDetector.class);
 
-    private final Set<Consumer<Boolean>> listeners = Collections.synchronizedSet(new HashSet<>());
+    private final Set<Consumer<Boolean>> listeners = new ConcurrentHashSet<>();
     private final Pattern themeNamePattern = Pattern.compile(".*dark.*", Pattern.CASE_INSENSITIVE);
     private final ExecutorService callbackExecutor = Executors.newSingleThreadExecutor(DetectorThread::new);
 

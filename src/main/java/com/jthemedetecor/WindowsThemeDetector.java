@@ -14,6 +14,7 @@
 
 package com.jthemedetecor;
 
+import com.jthemedetecor.util.ConcurrentHashSet;
 import com.sun.jna.platform.win32.Advapi32;
 import com.sun.jna.platform.win32.Advapi32Util;
 import com.sun.jna.platform.win32.W32Errors;
@@ -45,7 +46,7 @@ class WindowsThemeDetector extends OsThemeDetector {
     private static final String REGISTRY_PATH = "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize";
     private static final String REGISTRY_VALUE = "AppsUseLightTheme";
 
-    private final Set<Consumer<Boolean>> listeners = Collections.synchronizedSet(new HashSet<>());
+    private final Set<Consumer<Boolean>> listeners = new ConcurrentHashSet<>();
     private DetectorThread detectorThread;
 
     WindowsThemeDetector() {
