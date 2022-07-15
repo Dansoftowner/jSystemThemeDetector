@@ -82,6 +82,7 @@ public abstract class OsThemeDetector {
      *
      * @return {@code true} if the os uses dark theme; {@code false} otherwise.
      */
+    @ThreadSafe
     public abstract boolean isDark();
 
     /**
@@ -90,13 +91,16 @@ public abstract class OsThemeDetector {
      * @param darkThemeListener the {@link Consumer} that accepts a {@link Boolean} that represents
      *                          that the os using a dark theme or not
      */
+    @ThreadSafe
     public abstract void registerListener(@NotNull Consumer<Boolean> darkThemeListener);
 
     /**
      * Removes the listener.
      */
+    @ThreadSafe
     public abstract void removeListener(@Nullable Consumer<Boolean> darkThemeListener);
 
+    @ThreadSafe
     public static boolean isSupported() {
         return OsInfo.isWindows10OrLater() || OsInfo.isMacOsMojaveOrLater() || OsInfo.isGnome();
     }
