@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import oshi.annotation.concurrent.ThreadSafe;
 
 import java.util.function.Consumer;
 
@@ -31,16 +32,31 @@ public abstract class OsThemeDetector {
 
     private static final Logger logger = LoggerFactory.getLogger(OsThemeDetector.class);
 
-    private static OsThemeDetector osThemeDetector;
+    private static volatile OsThemeDetector osThemeDetector;
 
     OsThemeDetector() {
     }
 
     @NotNull
-    public static synchronized OsThemeDetector getDetector() {
-        if (osThemeDetector != null) {
-            return osThemeDetector;
-        } else if (OsInfo.isWindows10OrLater()) {
+    @ThreadSafe
+    public static OsThemeDetector getDetector() {
+        OsThemeDetector instance = osThemeDetector;
+
+        if (instance == null) {
+            synchronized (OsThemeDetector.class) {
+                instance = osThemeDetector;
+
+                if (instance == null) {
+                    osThemeDetector = instance = createDetector();
+                }
+            }
+        }
+
+        return instance;
+    }
+
+    private static OsThemeDetector createDetector() {
+        if (OsInfo.isWindows10OrLater()) {
             logDetection("Windows 10", WindowsThemeDetector.class);
             return osThemeDetector = new WindowsThemeDetector();
         } else if (OsInfo.isGnome()) {
