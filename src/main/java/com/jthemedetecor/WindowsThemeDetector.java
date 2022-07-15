@@ -64,11 +64,13 @@ class WindowsThemeDetector extends OsThemeDetector {
         Objects.requireNonNull(darkThemeListener);
         final boolean listenerAdded = listeners.add(darkThemeListener);
         final boolean singleListener = listenerAdded && listeners.size() == 1;
-        final boolean threadInterrupted = detectorThread != null && detectorThread.isInterrupted();
+        final DetectorThread currentDetectorThread = detectorThread;
+        final boolean threadInterrupted = currentDetectorThread != null && currentDetectorThread.isInterrupted();
 
         if (singleListener || threadInterrupted) {
-            this.detectorThread = new DetectorThread(this);
-            this.detectorThread.start();
+            final DetectorThread newDetectorThread = new DetectorThread(this);
+            this.detectorThread = newDetectorThread;
+            newDetectorThread.start();
         }
     }
 
