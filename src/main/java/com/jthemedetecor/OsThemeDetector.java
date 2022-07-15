@@ -58,17 +58,17 @@ public abstract class OsThemeDetector {
     private static OsThemeDetector createDetector() {
         if (OsInfo.isWindows10OrLater()) {
             logDetection("Windows 10", WindowsThemeDetector.class);
-            return osThemeDetector = new WindowsThemeDetector();
+            return new WindowsThemeDetector();
         } else if (OsInfo.isGnome()) {
             logDetection("Gnome", GnomeThemeDetector.class);
-            return osThemeDetector = new GnomeThemeDetector();
+            return new GnomeThemeDetector();
         } else if (OsInfo.isMacOsMojaveOrLater()) {
             logDetection("MacOS", MacOSThemeDetector.class);
-            return osThemeDetector = new MacOSThemeDetector();
+            return new MacOSThemeDetector();
         } else {
             logger.debug("Theme detection is not supported on the system: {} {}", OsInfo.getFamily(), OsInfo.getVersion());
             logger.debug("Creating empty detector...");
-            return osThemeDetector = new EmptyDetector();
+            return new EmptyDetector();
         }
     }
 
