@@ -14,6 +14,7 @@
 
 package com.jthemedetecor;
 
+import com.jthemedetecor.util.ConcurrentHashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -22,8 +23,6 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -42,10 +41,10 @@ class GnomeThemeDetector extends OsThemeDetector {
     private static final String MONITORING_CMD = "gsettings monitor org.gnome.desktop.interface gtk-theme";
     private static final String GET_CMD = "gsettings get org.gnome.desktop.interface gtk-theme";
 
-    private final Set<Consumer<Boolean>> listeners = Collections.synchronizedSet(new HashSet<>());
+    private final Set<Consumer<Boolean>> listeners = new ConcurrentHashSet<>();
     private final Pattern darkThemeNamePattern = Pattern.compile(".*dark.*", Pattern.CASE_INSENSITIVE);
 
-    private DetectorThread detectorThread;
+    private volatile DetectorThread detectorThread;
 
     @Override
     public boolean isDark() {
@@ -74,11 +73,13 @@ class GnomeThemeDetector extends OsThemeDetector {
         Objects.requireNonNull(darkThemeListener);
         final boolean listenerAdded = listeners.add(darkThemeListener);
         final boolean singleListener = listenerAdded && listeners.size() == 1;
-        final boolean threadInterrupted = detectorThread != null && detectorThread.isInterrupted();
+        final DetectorThread currentDetectorThread = detectorThread;
+        final boolean threadInterrupted = currentDetectorThread != null && currentDetectorThread.isInterrupted();
 
         if (singleListener || threadInterrupted) {
-            this.detectorThread = new DetectorThread(this);
-            this.detectorThread.start();
+            final DetectorThread newDetectorThread = new DetectorThread(this);
+            this.detectorThread = newDetectorThread;
+            newDetectorThread.start();
         }
     }
 

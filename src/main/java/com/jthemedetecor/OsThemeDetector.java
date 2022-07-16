@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import oshi.annotation.concurrent.ThreadSafe;
 
 import java.util.function.Consumer;
 
@@ -31,28 +32,43 @@ public abstract class OsThemeDetector {
 
     private static final Logger logger = LoggerFactory.getLogger(OsThemeDetector.class);
 
-    private static OsThemeDetector osThemeDetector;
+    private static volatile OsThemeDetector osThemeDetector;
 
     OsThemeDetector() {
     }
 
     @NotNull
-    public static synchronized OsThemeDetector getDetector() {
-        if (osThemeDetector != null) {
-            return osThemeDetector;
-        } else if (OsInfo.isWindows10OrLater()) {
+    @ThreadSafe
+    public static OsThemeDetector getDetector() {
+        OsThemeDetector instance = osThemeDetector;
+
+        if (instance == null) {
+            synchronized (OsThemeDetector.class) {
+                instance = osThemeDetector;
+
+                if (instance == null) {
+                    osThemeDetector = instance = createDetector();
+                }
+            }
+        }
+
+        return instance;
+    }
+
+    private static OsThemeDetector createDetector() {
+        if (OsInfo.isWindows10OrLater()) {
             logDetection("Windows 10", WindowsThemeDetector.class);
-            return osThemeDetector = new WindowsThemeDetector();
+            return new WindowsThemeDetector();
         } else if (OsInfo.isGnome()) {
             logDetection("Gnome", GnomeThemeDetector.class);
-            return osThemeDetector = new GnomeThemeDetector();
+            return new GnomeThemeDetector();
         } else if (OsInfo.isMacOsMojaveOrLater()) {
             logDetection("MacOS", MacOSThemeDetector.class);
-            return osThemeDetector = new MacOSThemeDetector();
+            return new MacOSThemeDetector();
         } else {
             logger.debug("Theme detection is not supported on the system: {} {}", OsInfo.getFamily(), OsInfo.getVersion());
             logger.debug("Creating empty detector...");
-            return osThemeDetector = new EmptyDetector();
+            return new EmptyDetector();
         }
     }
 
@@ -66,6 +82,7 @@ public abstract class OsThemeDetector {
      *
      * @return {@code true} if the os uses dark theme; {@code false} otherwise.
      */
+    @ThreadSafe
     public abstract boolean isDark();
 
     /**
@@ -74,13 +91,16 @@ public abstract class OsThemeDetector {
      * @param darkThemeListener the {@link Consumer} that accepts a {@link Boolean} that represents
      *                          that the os using a dark theme or not
      */
+    @ThreadSafe
     public abstract void registerListener(@NotNull Consumer<Boolean> darkThemeListener);
 
     /**
      * Removes the listener.
      */
+    @ThreadSafe
     public abstract void removeListener(@Nullable Consumer<Boolean> darkThemeListener);
 
+    @ThreadSafe
     public static boolean isSupported() {
         return OsInfo.isWindows10OrLater() || OsInfo.isMacOsMojaveOrLater() || OsInfo.isGnome();
     }

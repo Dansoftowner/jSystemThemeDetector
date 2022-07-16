@@ -14,19 +14,13 @@
 
 package com.jthemedetecor;
 
-import com.sun.jna.platform.win32.Advapi32;
-import com.sun.jna.platform.win32.Advapi32Util;
-import com.sun.jna.platform.win32.W32Errors;
-import com.sun.jna.platform.win32.Win32Exception;
-import com.sun.jna.platform.win32.WinNT;
-import com.sun.jna.platform.win32.WinReg;
+import com.jthemedetecor.util.ConcurrentHashSet;
+import com.sun.jna.platform.win32.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -45,8 +39,8 @@ class WindowsThemeDetector extends OsThemeDetector {
     private static final String REGISTRY_PATH = "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize";
     private static final String REGISTRY_VALUE = "AppsUseLightTheme";
 
-    private final Set<Consumer<Boolean>> listeners = Collections.synchronizedSet(new HashSet<>());
-    private DetectorThread detectorThread;
+    private final Set<Consumer<Boolean>> listeners = new ConcurrentHashSet<>();
+    private volatile DetectorThread detectorThread;
 
     WindowsThemeDetector() {
     }
@@ -63,11 +57,13 @@ class WindowsThemeDetector extends OsThemeDetector {
         Objects.requireNonNull(darkThemeListener);
         final boolean listenerAdded = listeners.add(darkThemeListener);
         final boolean singleListener = listenerAdded && listeners.size() == 1;
-        final boolean threadInterrupted = detectorThread != null && detectorThread.isInterrupted();
+        final DetectorThread currentDetectorThread = detectorThread;
+        final boolean threadInterrupted = currentDetectorThread != null && currentDetectorThread.isInterrupted();
 
         if (singleListener || threadInterrupted) {
-            this.detectorThread = new DetectorThread(this);
-            this.detectorThread.start();
+            final DetectorThread newDetectorThread = new DetectorThread(this);
+            this.detectorThread = newDetectorThread;
+            newDetectorThread.start();
         }
     }
 
