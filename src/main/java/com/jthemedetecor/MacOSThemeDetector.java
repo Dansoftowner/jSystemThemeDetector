@@ -94,7 +94,7 @@ class MacOSThemeDetector extends OsThemeDetector {
     }
 
     private boolean isDarkTheme(String themeName) {
-        return themeNamePattern.matcher(themeName).matches();
+        return themeName != null && themeNamePattern.matcher(themeName).matches();
     }
 
     @Override
