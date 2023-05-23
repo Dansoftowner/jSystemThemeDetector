@@ -102,10 +102,12 @@ a basic JavaFX application that changes the UI when the OS switched to a dark/li
 ![Running the demo app on Windows 10](docs/screenshot/Windows10ThemeDetection.gif)
 
 # Projects using `jSystemThemeDetector`
-If this library is used by your project, let me know in the `Discussions` and I will mention that in this section. 
 
 * [Boomega](https://github.com/Dansoftowner/Boomega) - A modern book explorer & catalog application
 * [Document Archiver](https://github.com/Document-Archiver/com.sophisticatedapps.archiving.document-archiver) - Archive all your documents in a consistent way, which enables you to retrieve them later fast and easy.
+* [pearletj](https://github.com/eth3-peth/pearletj) - Cross-platform multi-chain thick wallet for Cryto-currencies
+
+If this library is used by your project, feel free to create a PR and mention that in this section! 
 
 # Used libraries
 
