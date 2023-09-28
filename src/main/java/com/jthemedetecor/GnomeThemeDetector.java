@@ -38,8 +38,11 @@ class GnomeThemeDetector extends OsThemeDetector {
 
     private static final Logger logger = LoggerFactory.getLogger(GnomeThemeDetector.class);
 
-    private static final String MONITORING_CMD = "gsettings monitor org.gnome.desktop.interface gtk-theme";
-    private static final String GET_CMD = "gsettings get org.gnome.desktop.interface gtk-theme";
+    private static final String MONITORING_CMD = "gsettings monitor org.gnome.desktop.interface";
+    private static final String[] GET_CMD = new String[]{
+            "gsettings get org.gnome.desktop.interface gtk-theme",
+            "gsettings get org.gnome.desktop.interface color-scheme"
+    };
 
     private final Set<Consumer<Boolean>> listeners = new ConcurrentHashSet<>();
     private final Pattern darkThemeNamePattern = Pattern.compile(".*dark.*", Pattern.CASE_INSENSITIVE);
@@ -50,11 +53,13 @@ class GnomeThemeDetector extends OsThemeDetector {
     public boolean isDark() {
         try {
             Runtime runtime = Runtime.getRuntime();
-            Process process = runtime.exec(GET_CMD);
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                String readLine = reader.readLine();
-                if (readLine != null) {
-                    return isDarkTheme(readLine);
+            for (String cmd : GET_CMD) {
+                Process process = runtime.exec(cmd);
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                    String readLine = reader.readLine();
+                    if (readLine != null && isDarkTheme(readLine)) {
+                        return true;
+                    }
                 }
             }
         } catch (IOException e) {
@@ -98,6 +103,7 @@ class GnomeThemeDetector extends OsThemeDetector {
     private static final class DetectorThread extends Thread {
 
         private final GnomeThemeDetector detector;
+        private final Pattern outputPattern = Pattern.compile("(gtk-theme|color-scheme).*", Pattern.CASE_INSENSITIVE);
         private boolean lastValue;
 
         DetectorThread(@NotNull GnomeThemeDetector detector) {
@@ -117,6 +123,9 @@ class GnomeThemeDetector extends OsThemeDetector {
                     while (!this.isInterrupted()) {
                         //Expected input = gtk-theme: '$GtkThemeName'
                         String readLine = reader.readLine();
+                        if (!outputPattern.matcher(readLine).matches()) {
+                            continue;
+                        }
                         String[] keyValue = readLine.split("\\s");
                         String value = keyValue[1];
                         boolean currentDetection = detector.isDarkTheme(value);
