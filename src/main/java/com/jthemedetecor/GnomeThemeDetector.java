@@ -123,6 +123,12 @@ class GnomeThemeDetector extends OsThemeDetector {
                     while (!this.isInterrupted()) {
                         //Expected input = gtk-theme: '$GtkThemeName'
                         String readLine = reader.readLine();
+                        
+                        // reader.readLine sometimes returns null on application shutdown.
+                        if (readLine == null) {
+                            continue;
+                        }
+                        
                         if (!outputPattern.matcher(readLine).matches()) {
                             continue;
                         }
