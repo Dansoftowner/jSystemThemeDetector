@@ -35,15 +35,19 @@ import java.util.function.Consumer;
  */
 public class KdeThemeDetector extends OsThemeDetector {
     private static final Logger logger = LoggerFactory.getLogger(KdeThemeDetector.class);
+    /**
+     * List of the known look and feel packages, if the user use a package that is not listed in this list
+     * then will check if the package name contains `dark` regardless of the case sensitivity
+     * */
+    private static final String[] darkLookAndFeelPackages = {
+            "org.kde.breezedark.desktop", "org.kde.oxygen", "org.kde.arc-dark",
+            "org.kde.numix-dark", "org.kde.papirus-dark", "org.kde.suru-dark"
+    };
 
     @Override
     public boolean isDark() {
         try {
             String currentLookAndFeelPackageName = getCurrentLookAndFeelPackageName();
-            String[] darkLookAndFeelPackages = {
-                    "org.kde.breezedark.desktop", "org.kde.oxygen", "org.kde.arc-dark",
-                    "org.kde.numix-dark", "org.kde.papirus-dark", "org.kde.suru-dark"
-            };
 
             if (Arrays.asList(darkLookAndFeelPackages).contains(currentLookAndFeelPackageName)) {
                 return true;
@@ -66,6 +70,7 @@ public class KdeThemeDetector extends OsThemeDetector {
         // Build the complete file path
         filePath = homeDir.resolve(".config/kdeglobals").toString();
 
+        // Read the file and get the value of the property LookAndFeelPackage
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String lookAndFeelPackage = null;
             String line;
