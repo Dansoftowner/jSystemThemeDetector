@@ -62,16 +62,16 @@ public class KdeThemeDetector extends OsThemeDetector {
     }
 
     private String getCurrentLookAndFeelPackageName() throws IOException {
-        String filePath;
+        String kdeGlobalsFilePath;
 
         // Get user's home directory
         Path homeDir = Paths.get(System.getProperty("user.home"));
 
         // Build the complete file path
-        filePath = homeDir.resolve(".config/kdeglobals").toString();
+        kdeGlobalsFilePath = homeDir.resolve(".config/kdeglobals").toString();
 
         // Read the file and get the value of the property LookAndFeelPackage
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(kdeGlobalsFilePath))) {
             String lookAndFeelPackage = null;
             String line;
             while ((line = reader.readLine()) != null) {
