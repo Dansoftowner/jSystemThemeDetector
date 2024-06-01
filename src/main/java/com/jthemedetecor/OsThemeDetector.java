@@ -62,6 +62,9 @@ public abstract class OsThemeDetector {
         } else if (OsInfo.isGnome()) {
             logDetection("Gnome", GnomeThemeDetector.class);
             return new GnomeThemeDetector();
+        } else if (OsInfo.isKde()) {
+            logDetection("Kde", KdeThemeDetector.class);
+            return new KdeThemeDetector();
         } else if (OsInfo.isMacOsMojaveOrLater()) {
             logDetection("MacOS", MacOSThemeDetector.class);
             return new MacOSThemeDetector();
@@ -102,7 +105,8 @@ public abstract class OsThemeDetector {
 
     @ThreadSafe
     public static boolean isSupported() {
-        return OsInfo.isWindows10OrLater() || OsInfo.isMacOsMojaveOrLater() || OsInfo.isGnome();
+        return OsInfo.isWindows10OrLater() || OsInfo.isMacOsMojaveOrLater() || OsInfo.isGnome() ||
+                OsInfo.isKde();
     }
 
     private static final class EmptyDetector extends OsThemeDetector {

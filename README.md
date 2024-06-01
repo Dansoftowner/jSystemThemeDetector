@@ -13,7 +13,10 @@ It can be useful for example if you want to synchronize your GUI App's look and 
 > This library is inspired by the dark-theme detection in [Intellij Idea](https://github.com/JetBrains/intellij-community).
 
 # Compatibility
-It works on **Windows 10**, **MacOS Mojave** (or later) and even on **some Linux distributions**.
+It works on **Windows 10**, **MacOS Mojave** (or later) and even on **some Linux desktop environments**:
+
+- Gnome: Fully supported and tested on Ubuntu
+- KDE Plasma: For now will only support `isDark` method, tested on Ubuntu with `kde-plasma-desktop` package
 
 # Requirements
 **Java 11 or higher**
