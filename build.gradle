@@ -29,8 +29,8 @@ dependencies {
     testImplementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
 
     //JNA
-    implementation 'net.java.dev.jna:jna:5.10.0'
-    implementation 'net.java.dev.jna:jna-platform:5.10.0'
+    implementation 'net.java.dev.jna:jna:5.15.0'
+    implementation 'net.java.dev.jna:jna-platform:5.15.0'
 
     //JFA
     implementation ('de.jangassen:jfa:1.2.0') {
