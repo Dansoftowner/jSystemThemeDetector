@@ -43,12 +43,17 @@ public class OsInfo {
         return hasTypeAndVersionOrHigher(PlatformEnum.MACOS, "10.14");
     }
 
+    @NotNull
+    public static String getCurrentLinuxDesktopEnvironmentName() {
+        return System.getenv("XDG_CURRENT_DESKTOP");
+    }
+
     public static boolean isGnome() {
-        return isLinux() && (
-                        queryResultContains("echo $XDG_CURRENT_DESKTOP", "gnome") ||
-                        queryResultContains("echo $XDG_DATA_DIRS | grep -Eo 'gnome'", "gnome") ||
-                        queryResultContains("ps -e | grep -E -i \"gnome\"", "gnome")
-        );
+        return isLinux() && getCurrentLinuxDesktopEnvironmentName().toLowerCase().contains("gnome");
+    }
+
+    public static boolean isKde() {
+        return isLinux() && getCurrentLinuxDesktopEnvironmentName().toLowerCase().contains("KDE".toLowerCase());
     }
 
     public static boolean hasType(PlatformEnum platformType) {
