@@ -85,12 +85,18 @@ class WindowsThemeDetector extends OsThemeDetector {
 
         private boolean lastValue;
 
+        /**
+         * milliseconds
+         */
+        private final int interval;
+
         DetectorThread(WindowsThemeDetector themeDetector) {
             this.themeDetector = themeDetector;
             this.lastValue = themeDetector.isDark();
             this.setName("Windows 10 Theme Detector Thread");
             this.setDaemon(true);
             this.setPriority(Thread.NORM_PRIORITY - 1);
+            this.interval = Integer.getInteger("jthemedetecor.windows.theme.interval", -1);
         }
 
         @Override
@@ -117,6 +123,14 @@ class WindowsThemeDetector extends OsThemeDetector {
                         } catch (RuntimeException e) {
                             logger.error("Caught exception during listener notifying ", e);
                         }
+                    }
+                } else if (interval > 0) {
+                    try {
+                        //noinspection BusyWait
+                        Thread.sleep(interval);
+                    } catch (InterruptedException e) {
+                        logger.error("Caught exception during thread interrupt ", e);
+                        break;
                     }
                 }
             }
