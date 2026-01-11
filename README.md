@@ -13,10 +13,7 @@ It can be useful for example if you want to synchronize your GUI App's look and 
 > This library is inspired by the dark-theme detection in [Intellij Idea](https://github.com/JetBrains/intellij-community).
 
 # Compatibility
-It works on **Windows 10**, **MacOS Mojave** (or later) and even on **some Linux desktop environments**:
-
-- Gnome: Fully supported and tested on Ubuntu
-- KDE Plasma: Fully supported and tested on Ubuntu
+It works on **Windows 10**, **MacOS Mojave** (or later) and even on **some Linux distributions**.
 
 # Requirements
 **Java 11 or higher**
