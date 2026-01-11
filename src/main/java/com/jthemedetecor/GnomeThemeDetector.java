@@ -49,6 +49,15 @@ class GnomeThemeDetector extends OsThemeDetector {
 
     private volatile DetectorThread detectorThread;
 
+    GnomeThemeDetector() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (detectorThread != null) {
+                detectorThread.destroyProcess();
+                detectorThread.interrupt();
+            }
+        }));
+    }
+
     @Override
     public boolean isDark() {
         try {
@@ -91,8 +100,9 @@ class GnomeThemeDetector extends OsThemeDetector {
     @Override
     public synchronized void removeListener(@Nullable Consumer<Boolean> darkThemeListener) {
         listeners.remove(darkThemeListener);
-        if (listeners.isEmpty()) {
-            this.detectorThread.interrupt();
+        if (listeners.isEmpty() && detectorThread != null) {
+            detectorThread.destroyProcess();
+            detectorThread.interrupt();
             this.detectorThread = null;
         }
     }
@@ -105,6 +115,7 @@ class GnomeThemeDetector extends OsThemeDetector {
         private final GnomeThemeDetector detector;
         private final Pattern outputPattern = Pattern.compile("(gtk-theme|color-scheme).*", Pattern.CASE_INSENSITIVE);
         private boolean lastValue;
+        private volatile Process monitoringProcess;
 
         DetectorThread(@NotNull GnomeThemeDetector detector) {
             this.detector = detector;
@@ -114,41 +125,60 @@ class GnomeThemeDetector extends OsThemeDetector {
             this.setPriority(Thread.NORM_PRIORITY - 1);
         }
 
+        public void destroyProcess() {
+            Process process = monitoringProcess;
+            if (process != null && process.isAlive()) {
+                process.destroy();
+                logger.debug("Monitoring process destroyed by external call");
+            }
+        }
+
         @Override
         public void run() {
             try {
                 Runtime runtime = Runtime.getRuntime();
-                Process monitoringProcess = runtime.exec(MONITORING_CMD);
+                monitoringProcess = runtime.exec(MONITORING_CMD);
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(monitoringProcess.getInputStream()))) {
                     while (!this.isInterrupted()) {
-                        //Expected input = gtk-theme: '$GtkThemeName'
-                        String readLine = reader.readLine();
-                        
-                        // reader.readLine sometimes returns null on application shutdown.
-                        if (readLine == null) {
-                            continue;
-                        }
-                        
-                        if (!outputPattern.matcher(readLine).matches()) {
-                            continue;
-                        }
-                        String[] keyValue = readLine.split("\\s");
-                        String value = keyValue[1];
-                        boolean currentDetection = detector.isDarkTheme(value);
-                        logger.debug("Theme changed detection, dark: {}", currentDetection);
-                        if (currentDetection != lastValue) {
-                            lastValue = currentDetection;
-                            for (Consumer<Boolean> listener : detector.listeners) {
-                                try {
-                                    listener.accept(currentDetection);
-                                } catch (RuntimeException e) {
-                                    logger.error("Caught exception during listener notifying ", e);
+                        try {
+                            //Expected input = gtk-theme: '$GtkThemeName'
+                            String readLine = reader.readLine();
+
+                            // reader.readLine sometimes returns null on application shutdown.
+                            if (readLine == null) {
+                                if (monitoringProcess.isAlive()) {
+                                    continue;
+                                } else {
+                                    break;
                                 }
                             }
+
+                            if (!outputPattern.matcher(readLine).matches()) {
+                                continue;
+                            }
+                            String[] keyValue = readLine.split("\\s");
+                            String value = keyValue[1];
+                            boolean currentDetection = detector.isDarkTheme(value);
+                            logger.debug("Theme changed detection, dark: {}", currentDetection);
+                            if (currentDetection != lastValue) {
+                                lastValue = currentDetection;
+                                for (Consumer<Boolean> listener : detector.listeners) {
+                                    try {
+                                        listener.accept(currentDetection);
+                                    } catch (RuntimeException e) {
+                                        logger.error("Caught exception during listener notifying ", e);
+                                    }
+                                }
+                            }
+                        } catch (IOException e) {
+                            if (this.isInterrupted() || monitoringProcess == null || !monitoringProcess.isAlive()) {
+                                break;
+                            }
+                            logger.error("Error reading from monitoring process: ", e);
                         }
                     }
                     logger.debug("ThemeDetectorThread has been interrupted!");
-                    if (monitoringProcess.isAlive()) {
+                    if (monitoringProcess != null && monitoringProcess.isAlive()) {
                         monitoringProcess.destroy();
                         logger.debug("Monitoring process has been destroyed!");
                     }
