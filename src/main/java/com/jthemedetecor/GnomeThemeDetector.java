@@ -126,7 +126,8 @@ class GnomeThemeDetector extends OsThemeDetector {
                         
                         // reader.readLine sometimes returns null on application shutdown.
                         if (readLine == null) {
-                            continue;
+                            // On application shutdown, exit reader loop
+                            break;
                         }
                         
                         if (!outputPattern.matcher(readLine).matches()) {
